@@ -124,7 +124,10 @@
         color 220ms ease,
         filter 220ms ease;
 
-      user-select:none;
+      user-select: text;
+      -webkit-user-select: text;
+	  -ms-user-select: text; 
+      -webkit-tap-highlight-color:transparent;
       -webkit-tap-highlight-color:transparent;
     }
 
@@ -167,19 +170,31 @@
   <!-- Canvas stars falling diagonally (top-left -> bottom-right) -->
   <canvas id="starCanvas" aria-hidden="true"></canvas>
 
-  <main class="wrap">
-    <h1>
-      Hello, Webverse Worlds!<br />
-      I'm
+<main class="wrap">
+  <h1>
+    Hello, Webverse Worlds!<br />
+    I'm
+    <a
+      class="chip"
+      href="https://valentin-000-001-002.webverse.world"
+      aria-label="Enter Valentin 000-001-002 Webverse World"
+    >
+      Valentin&nbsp;000-001-002
+    </a>
+    <br />
+    <span style="font-size:0.7em; color:var(--muted); font-weight:400;">
+      Across the Webverse, another Valentin awaits:
       <a
         class="chip"
-        href="https://valentin-000-001-002.webverse.world"
-        aria-label="Enter Valentin 000-001-002 Webverse World"
+        href="https://valentin-000-001-001.webverse.world"
+        aria-label="Enter Valentin 000-001-001 Webverse World"
       >
-        Valentin&nbsp;000-001-002
+        Valentin&nbsp;000-001-001
       </a>
-    </h1>
-  </main>
+    </span>
+  </h1>
+</main>
+
 
   <script>
   (() => {
