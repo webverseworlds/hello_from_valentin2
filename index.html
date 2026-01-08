@@ -1,36 +1,316 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta name="robots" content="noindex, nofollow">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#050616" />
+  <meta name="robots" content="noindex, nofollow" />
+
   <title>Hello, Webverse Worlds!</title>
 
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600&family=Orbitron:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
   <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 1rem;
-      font-family: Arial, Helvetica, sans-serif;
-      text-align: center;
+    :root{
+      --bg0:#050616;
+      --bg1:#070826;
+      --ink:#f6f8ff;
+      --muted:rgba(246,248,255,.72);
+      --line:rgba(120,170,255,.22);
+      --chipBorder:rgba(120,170,255,.28);
+      --chipBg:rgba(8,10,34,.45);
     }
 
-    h1 {
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+
+    body{
+      margin:0;
+      color:var(--ink);
+      background:
+        radial-gradient(900px 700px at 55% 40%, rgba(120,170,255,.14), transparent 55%),
+        radial-gradient(600px 500px at 25% 70%, rgba(120,170,255,.08), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg0));
+      overflow-x:hidden;
+      font-family:"Exo 2", system-ui, sans-serif;
+      text-align:center;
+    }
+
+    /* starfield layer */
+    .stars::before,
+    .stars::after{
+      content:"";
+      position:fixed;
+      inset:-20%;
+      background-image:
+        radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.35), transparent 55%),
+        radial-gradient(1px 1px at 60% 40%, rgba(255,255,255,.28), transparent 55%);
+      background-size: 420px 420px;
+      pointer-events:none;
+      opacity:.35;
+      animation: drift 18s linear infinite;
+      z-index: 0;
+    }
+    .stars::after{
+      opacity:.2;
+      background-size: 640px 640px;
+      animation-duration: 28s;
+      animation-direction: reverse;
+    }
+    @keyframes drift{
+      to{ transform: translate3d(60px,40px,0); }
+    }
+
+    /* Canvas starfall background */
+    #starCanvas{
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;          /* behind content */
+      pointer-events: none;
+    }
+
+    /* Content stays above canvas */
+    .wrap{
+      position: relative;
+      z-index: 1;
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:56px 18px;
+    }
+
+    h1{
       font-size: clamp(1.8rem, 5vw, 4rem);
       line-height: 1.2;
       margin: 0;
+      font-weight: 500;
       word-wrap: break-word;
+    }
+
+    /* =========================
+       Webverse CHIP (inline-safe)
+       ========================= */
+    .chip{
+      position:relative;
+      display:inline-flex;
+      align-items:baseline;
+      vertical-align:baseline;
+
+      /* inline-safe sizing */
+      padding:0 .55em;
+      line-height:inherit;
+
+      border-radius:999px;
+      border:1px solid var(--chipBorder);
+      background:var(--chipBg);
+      color:rgba(246,248,255,.90);
+      text-decoration:none;
+      white-space:nowrap;
+
+      transform:translateZ(0);
+      transition:
+        border-color 220ms ease,
+        background-color 220ms ease,
+        box-shadow 220ms ease,
+        color 220ms ease,
+        filter 220ms ease;
+
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .chip:hover{
+      border-color: rgba(160,210,255,.55);
+      background: rgba(10,14,44,.55);
+      box-shadow:
+        0 10px 26px rgba(0,0,0,.35),
+        0 0 0 1px rgba(140,200,255,.22),
+        0 0 24px rgba(120,170,255,.18);
+      filter: saturate(1.1);
+    }
+
+    .chip:focus-visible{
+      outline:none;
+      border-color: rgba(180,225,255,.65);
+      box-shadow:
+        0 12px 28px rgba(0,0,0,.4),
+        0 0 0 3px rgba(120,170,255,.28);
+    }
+
+    .chip:active{
+      box-shadow:
+        0 6px 14px rgba(0,0,0,.35),
+        0 0 0 1px rgba(120,170,255,.18);
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .stars::before, .stars::after{
+        animation: none !important;
+      }
+      #starCanvas{ display:none; }
+      .chip{ transition: none !important; }
     }
   </style>
 </head>
 
-<body>
-  <h1>
-    Hello, Webverse Worlds!<br />
-    I'm Valentin 000-001-002
-  </h1>
+<body class="stars">
+  <!-- Canvas stars falling diagonally (top-left -> bottom-right) -->
+  <canvas id="starCanvas" aria-hidden="true"></canvas>
+
+  <main class="wrap">
+    <h1>
+      Hello, Webverse Worlds!<br />
+      I'm
+      <a
+        class="chip"
+        href="https://valentin-000-001-002.webverse.world"
+        aria-label="Enter Valentin 000-001-002 Webverse World"
+      >
+        Valentin&nbsp;000-001-002
+      </a>
+    </h1>
+  </main>
+
+  <script>
+  (() => {
+    const canvas = document.getElementById("starCanvas");
+    if (!canvas) return;
+
+    // Respect reduced motion (also handled by CSS display:none above)
+    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+
+    const ctx = canvas.getContext("2d", { alpha: true });
+
+    // Global slowdown (same as your site)
+    const TIME_SCALE = 0.5; // 1 = normal, 0.5 = half speed, 0.3 = very slow
+
+    const DPR = Math.min(2, window.devicePixelRatio || 1);
+    let w = 0, h = 0;
+
+    function resize() {
+      w = Math.floor(window.innerWidth);
+      h = Math.floor(window.innerHeight);
+      canvas.width = Math.floor(w * DPR);
+      canvas.height = Math.floor(h * DPR);
+      canvas.style.width = w + "px";
+      canvas.style.height = h + "px";
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    }
+
+    const stars = [];
+    const STAR_COUNT = Math.min(240, Math.floor((window.innerWidth * window.innerHeight) / 8500));
+
+    function rand(min, max) { return Math.random() * (max - min) + min; }
+
+    function spawnStar(offscreen = true) {
+      const fromTop = Math.random() < 0.55;
+
+      const x = offscreen
+        ? (fromTop ? rand(-w * 0.2, w * 1.0) : rand(-w * 0.2, 0))
+        : rand(0, w);
+
+      const y = offscreen
+        ? (fromTop ? rand(-h * 0.2, 0) : rand(-h * 0.2, h * 1.0))
+        : rand(0, h);
+
+      // Slower speed range (same as your site)
+      const speed = rand(8, 50); // px/sec
+
+      // Top-left -> bottom-right diagonal
+      const angle = rand(Math.PI * 0.15, Math.PI * 0.30); // ~27°–54° down-right
+      const vx = Math.cos(angle) * speed;
+      const vy = Math.sin(angle) * speed;
+
+      return {
+        x, y,
+        vx, vy,
+        r: rand(0.6, 1.8),
+        a: rand(0.15, 0.75),
+        tw: rand(0.6, 1.6),
+        ph: rand(0, Math.PI * 2),
+        tail: rand(0.0, 0.45) // small streaks sometimes
+      };
+    }
+
+    function init() {
+      stars.length = 0;
+      for (let i = 0; i < STAR_COUNT; i++) stars.push(spawnStar(false));
+    }
+
+    let last = performance.now();
+
+    function tick(now) {
+      // Apply TIME_SCALE to dt (global slowdown)
+      const dt = Math.min(0.033, (now - last) / 1000) * TIME_SCALE;
+      last = now;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // soft fade veil
+      ctx.fillStyle = "rgba(5,6,22,0.08)";
+      ctx.fillRect(0, 0, w, h);
+
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+
+        s.x += s.vx * dt;
+        s.y += s.vy * dt;
+
+        // respawn when beyond bottom/right
+        if (s.x > w + 60 || s.y > h + 60) {
+          stars[i] = spawnStar(true);
+          continue;
+        }
+
+        // twinkle
+        s.ph += s.tw * dt;
+        const tw = 0.55 + 0.45 * Math.sin(s.ph * 3.2);
+        const alpha = s.a * tw;
+
+        // shorter streaks
+        if (s.tail > 0.05) {
+          const tx = s.vx * 0.03 * (1 + s.tail);
+          const ty = s.vy * 0.03 * (1 + s.tail);
+
+          ctx.beginPath();
+          ctx.moveTo(s.x, s.y);
+          ctx.lineTo(s.x - tx, s.y - ty);
+          ctx.strokeStyle = `rgba(255,255,255,${alpha * 0.55})`;
+          ctx.lineWidth = Math.max(1, s.r);
+          ctx.lineCap = "round";
+          ctx.stroke();
+        }
+
+        // dot
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+        ctx.fill();
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    window.addEventListener("resize", () => {
+      resize();
+      init();
+    }, { passive: true });
+
+    resize();
+    init();
+    requestAnimationFrame(tick);
+  })();
+  </script>
 </body>
 </html>
